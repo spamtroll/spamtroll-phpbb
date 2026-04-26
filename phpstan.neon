@@ -1,0 +1,50 @@
+parameters:
+    level: 5
+    bootstrapFiles:
+        - vendor/autoload.php
+    paths:
+        - ./
+    excludePaths:
+        - vendor (?)
+        - tests/integration (?)
+        # Files that extend abstract phpBB / PHPUnit base classes which
+        # aren't autoloaded in this project (only the SDK is). PHPStan
+        # can't ignore "extends unknown class" via ignoreErrors, so those
+        # files have to live outside the analysis set entirely.
+        - ext.php
+        - cron/task/cleanup_logs.php
+        - migrations/v10x/m1_initial_schema.php
+        - migrations/v10x/m2_default_config.php
+        - tests/scanner/scanner_test.php
+        - tests/listener/registration_test.php
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    universalObjectCratesClasses:
+        - phpbb\config\config
+        - phpbb\event\data
+    ignoreErrors:
+        # phpBB core classes are not autoloaded in this project; only the
+        # SDK is. Suppress "unknown class" noise from \phpbb\* references.
+        -
+            messages:
+                - '#unknown class phpbb\\#i'
+                - '#has invalid type phpbb\\#i'
+                - '#Call to method .* on an unknown class phpbb\\#i'
+                - '#Access to property .* on an unknown class phpbb\\#i'
+                - '#Instantiated class phpbb\\#'
+                - '#given\\.$#i'
+            paths:
+                - service/*
+                - event/*
+                - acp/*
+                - tests/*
+        # PHPUnit isn't fully visible to phpstan without bridges; we
+        # don't want to pull phpstan/phpstan-phpunit into the dev set
+        # just for static analysis cosmetics.
+        -
+            messages:
+                - '#Class .* extends unknown class PHPUnit\\Framework\\TestCase\.#'
+                - '#Call to an undefined static method .*::assert#'
+                - '#Class .*::assert.*not found#'
+            paths:
+                - tests/*

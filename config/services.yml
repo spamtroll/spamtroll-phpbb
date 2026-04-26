@@ -1,0 +1,43 @@
+services:
+    spamtroll.phpbb.http_client:
+        class: spamtroll\phpbb\service\http_client
+
+    spamtroll.phpbb.client_factory:
+        class: spamtroll\phpbb\service\client_factory
+        arguments:
+            - '@config'
+            - '@spamtroll.phpbb.http_client'
+
+    spamtroll.phpbb.logger:
+        class: spamtroll\phpbb\service\logger
+        arguments:
+            - '@dbal.conn'
+            - '%core.table_prefix%'
+
+    spamtroll.phpbb.scanner:
+        class: spamtroll\phpbb\service\scanner
+        arguments:
+            - '@spamtroll.phpbb.client_factory'
+            - '@config'
+            - '@spamtroll.phpbb.logger'
+            - '@user'
+
+    spamtroll.phpbb.listener:
+        class: spamtroll\phpbb\event\main_listener
+        arguments:
+            - '@spamtroll.phpbb.scanner'
+            - '@config'
+            - '@user'
+            - '@request'
+        tags:
+            - { name: event.listener }
+
+    spamtroll.phpbb.acp.module:
+        class: spamtroll\phpbb\acp\main_module
+        arguments:
+            - '@config'
+            - '@spamtroll.phpbb.client_factory'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'

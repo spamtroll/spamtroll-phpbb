@@ -1,0 +1,66 @@
+{
+    "name": "spamtroll/phpbb",
+    "type": "phpbb-extension",
+    "description": "Spamtroll anti-spam extension for phpBB 3.3+: real-time spam detection for posts, private messages, and registrations.",
+    "homepage": "https://spamtroll.io",
+    "license": "GPL-2.0-only",
+    "version": "0.1.0",
+    "keywords": [
+        "phpbb-extension",
+        "spamtroll",
+        "spam",
+        "anti-spam",
+        "moderation"
+    ],
+    "support": {
+        "source": "https://github.com/spamtroll/spamtroll-phpbb",
+        "issues": "https://github.com/spamtroll/spamtroll-phpbb/issues"
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "spamtroll/php-sdk": "^0.9"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^9.6",
+        "symfony/event-dispatcher": "^4.4 || ^5.4"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../spamtroll-php-sdk",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "spamtroll/php-sdk": "0.9.2"
+                }
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "spamtroll\\phpbb\\": ""
+        },
+        "exclude-from-classmap": [
+            "/tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spamtroll\\phpbb\\tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "display-name": "Spamtroll Anti-Spam",
+        "soft-require": {
+            "phpbb/phpbb": "~3.3"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}

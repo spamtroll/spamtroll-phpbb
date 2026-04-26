@@ -1,0 +1,118 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{L_ACP_SPAMTROLL_SETTINGS}</h1>
+
+<p>{L_ACP_SPAMTROLL_SETTINGS_EXPLAIN}</p>
+
+<!-- IF S_SUCCESS -->
+    <div class="successbox">
+        <h3>{L_INFORMATION}</h3>
+        <p>{S_SUCCESS}</p>
+    </div>
+<!-- ENDIF -->
+
+<!-- IF S_ERROR -->
+    <div class="errorbox">
+        <h3>{L_WARNING}</h3>
+        <p>{S_ERROR}</p>
+    </div>
+<!-- ENDIF -->
+
+<!-- IF S_TEST_OK -->
+    <div class="successbox">
+        <h3>{L_SPAMTROLL_TEST_OK}</h3>
+        <p>{S_TEST_OK}</p>
+    </div>
+<!-- ENDIF -->
+
+<!-- IF S_TEST_ERROR -->
+    <div class="errorbox">
+        <h3>{L_SPAMTROLL_TEST_FAIL}</h3>
+        <p>{S_TEST_ERROR}</p>
+    </div>
+<!-- ENDIF -->
+
+<form id="acp_spamtroll" method="post" action="{U_ACTION}">
+
+    <fieldset>
+        <legend>{L_SPAMTROLL_API_SETTINGS}</legend>
+
+        <dl>
+            <dt><label for="spamtroll_api_key">{L_SPAMTROLL_API_KEY}:</label><br /><span>{L_SPAMTROLL_API_KEY_EXPLAIN}</span></dt>
+            <dd><input id="spamtroll_api_key" type="text" size="60" maxlength="255" name="spamtroll_api_key" value="{SPAMTROLL_API_KEY}" /></dd>
+        </dl>
+
+        <dl>
+            <dt><label for="spamtroll_api_url">{L_SPAMTROLL_API_URL}:</label></dt>
+            <dd><input id="spamtroll_api_url" type="text" size="60" maxlength="255" name="spamtroll_api_url" value="{SPAMTROLL_API_URL}" /></dd>
+        </dl>
+
+        <dl>
+            <dt><label for="spamtroll_timeout">{L_SPAMTROLL_TIMEOUT}:</label></dt>
+            <dd><input id="spamtroll_timeout" type="number" min="1" max="60" name="spamtroll_timeout" value="{SPAMTROLL_TIMEOUT}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_SPAMTROLL_THRESHOLDS}</legend>
+
+        <dl>
+            <dt><label for="spamtroll_spam_threshold">{L_SPAMTROLL_SPAM_THRESHOLD}:</label><br /><span>{L_SPAMTROLL_SPAM_THRESHOLD_EXPLAIN}</span></dt>
+            <dd><input id="spamtroll_spam_threshold" type="text" size="6" maxlength="6" name="spamtroll_spam_threshold" value="{SPAMTROLL_SPAM_THRESHOLD}" /></dd>
+        </dl>
+
+        <dl>
+            <dt><label for="spamtroll_suspicious_threshold">{L_SPAMTROLL_SUSPICIOUS_THRESHOLD}:</label><br /><span>{L_SPAMTROLL_SUSPICIOUS_THRESHOLD_EXPLAIN}</span></dt>
+            <dd><input id="spamtroll_suspicious_threshold" type="text" size="6" maxlength="6" name="spamtroll_suspicious_threshold" value="{SPAMTROLL_SUSPICIOUS_THRESHOLD}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_SPAMTROLL_SOURCES}</legend>
+
+        <dl>
+            <dt><label for="spamtroll_check_post">{L_SPAMTROLL_CHECK_POST}:</label></dt>
+            <dd>
+                <label><input type="radio" class="radio" name="spamtroll_check_post" value="1"<!-- IF SPAMTROLL_CHECK_POST --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="spamtroll_check_post" value="0"<!-- IF not SPAMTROLL_CHECK_POST --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt><label for="spamtroll_check_pm">{L_SPAMTROLL_CHECK_PM}:</label></dt>
+            <dd>
+                <label><input type="radio" class="radio" name="spamtroll_check_pm" value="1"<!-- IF SPAMTROLL_CHECK_PM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="spamtroll_check_pm" value="0"<!-- IF not SPAMTROLL_CHECK_PM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt><label for="spamtroll_check_registration">{L_SPAMTROLL_CHECK_REGISTRATION}:</label></dt>
+            <dd>
+                <label><input type="radio" class="radio" name="spamtroll_check_registration" value="1"<!-- IF SPAMTROLL_CHECK_REGISTRATION --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="spamtroll_check_registration" value="0"<!-- IF not SPAMTROLL_CHECK_REGISTRATION --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+            </dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_SPAMTROLL_LOGGING}</legend>
+
+        <dl>
+            <dt><label for="spamtroll_log_retention_days">{L_SPAMTROLL_LOG_RETENTION_DAYS}:</label></dt>
+            <dd><input id="spamtroll_log_retention_days" type="number" min="1" max="365" name="spamtroll_log_retention_days" value="{SPAMTROLL_LOG_RETENTION_DAYS}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset class="submit-buttons">
+        <input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+        &nbsp;
+        <a class="button2" href="{U_TEST_ACTION}">{L_SPAMTROLL_TEST_CONNECTION}</a>
+        {S_FORM_TOKEN}
+    </fieldset>
+
+</form>
+
+{% INCLUDE 'overall_footer.html' %}
