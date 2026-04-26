@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace spamtroll\phpbb\acp;
 
 use spamtroll\phpbb\service\client_factory;
+use spamtroll\phpbb\service\scanner;
 use Spamtroll\Sdk\Exception\SpamtrollException;
 
 /**
@@ -34,6 +35,8 @@ class main_module
     protected $config;
 
     protected client_factory $factory;
+
+    protected scanner $scanner;
 
     /** @var \phpbb\language\language */
     protected $language;
@@ -71,10 +74,11 @@ class main_module
      * @param \phpbb\template\template $template
      * @param \phpbb\user $user
      */
-    public function __construct($config, client_factory $factory, $language, $request, $template, $user)
+    public function __construct($config, client_factory $factory, scanner $scanner, $language, $request, $template, $user)
     {
         $this->config = $config;
         $this->factory = $factory;
+        $this->scanner = $scanner;
         $this->language = $language;
         $this->request = $request;
         $this->template = $template;
@@ -130,6 +134,43 @@ class main_module
         }
         $this->template->assign_var('U_ACTION', $this->u_action);
         $this->template->assign_var('U_TEST_ACTION', $this->u_action . '&amp;action=test');
+
+        // Quota-skipped panel — only populated when at least one scan
+        // was skipped because of HTTP 402 in the trailing 7 days.
+        // Template gates the whole block on S_QUOTA_SKIPPED so an
+        // empty log produces zero output.
+        $stats = $this->scanner->get_quota_skipped_stats(7);
+        if ($stats['total'] > 0) {
+            $usage = $stats['last_usage'];
+            $current = isset($usage['current']) && is_numeric($usage['current']) ? (int) $usage['current'] : 0;
+            $limit = isset($usage['limit']) && is_numeric($usage['limit']) ? (int) $usage['limit'] : 0;
+            $plan = isset($usage['plan']) && is_string($usage['plan']) ? $usage['plan'] : 'free';
+            // Render the body string in PHP rather than the template
+            // engine — phpBB's STX templates don't support sprintf
+            // interpolation, and pulling Twig in just for one banner
+            // isn't worth it. Heading + body land as opaque strings.
+            $heading = sprintf($this->translate('SPAMTROLL_QUOTA_SKIPPED_HEADING'), (int) $stats['total']);
+            if ($limit > 0) {
+                $body = sprintf(
+                    $this->translate('SPAMTROLL_QUOTA_SKIPPED_BODY'),
+                    (int) $stats['total'],
+                    $current,
+                    $limit,
+                    htmlspecialchars($plan, ENT_QUOTES, 'UTF-8'),
+                );
+            } else {
+                $body = sprintf(
+                    $this->translate('SPAMTROLL_QUOTA_SKIPPED_BODY_NO_USAGE'),
+                    (int) $stats['total'],
+                );
+            }
+            $this->template->assign_vars([
+                'S_QUOTA_SKIPPED' => true,
+                'L_SPAMTROLL_QUOTA_SKIPPED_HEADING' => $heading,
+                'S_QUOTA_SKIPPED_MESSAGE' => $body,
+                'U_QUOTA_SKIPPED_UPGRADE' => 'https://spamtroll.io/dashboard/billing',
+            ]);
+        }
     }
 
     private function handle_test_connection(): void

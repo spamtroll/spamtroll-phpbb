@@ -52,4 +52,9 @@ $lang = array_merge($lang, [
     'TEST_FAIL' => 'Could not contact the Spamtroll API',
     'CONFIG_UPDATED' => 'Settings saved.',
     'FORM_INVALID' => 'Form security token is invalid. Please try again.',
+
+    'SPAMTROLL_QUOTA_SKIPPED_HEADING' => '%d submissions were not scanned in the last 7 days',
+    'SPAMTROLL_QUOTA_SKIPPED_BODY' => 'Your daily Spamtroll quota was exhausted, so the extension allowed those %1$d submissions through unscanned (fail-open). Last reading from the API: %2$d / %3$d on the %4$s plan.',
+    'SPAMTROLL_QUOTA_SKIPPED_BODY_NO_USAGE' => 'Your daily Spamtroll quota was exhausted, so the extension allowed those %d submissions through unscanned (fail-open).',
+    'SPAMTROLL_QUOTA_SKIPPED_UPGRADE' => 'Upgrade your plan',
 ]);

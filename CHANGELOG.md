@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - **Quota-aware fail-open** on HTTP 402 / `QUOTA_EXCEEDED`. Scanner records the event in `\phpbb\config\config` under `spamtroll_quota_skipped_log` and returns `scan_result::allow_default()` so posts and registrations go through unscanned instead of being blocked because the user's plan ran out of daily scans.
 - `scanner::get_quota_skipped_stats($days)` returns the trailing-7-day count plus the latest API usage block for the ACP module to render an upgrade CTA. Storage is a single config row, JSON-encoded, pruned to 30 days on every write — no schema migrator needed.
+- ACP settings template renders a quota-exhausted warning panel with the trailing-7-day count, the last reading from the API (`current/limit/plan`), and an "Upgrade your plan" CTA linking to `https://spamtroll.io/dashboard/billing`. The panel is only emitted when at least one event was recorded in the window so a healthy account doesn't see it. `main_module` gains a constructor dependency on the existing `scanner` service (`spamtroll.phpbb.scanner`).
 
 ## [0.1.0] - 2026-04-25
 

@@ -37,6 +37,7 @@ services:
         arguments:
             - '@config'
             - '@spamtroll.phpbb.client_factory'
+            - '@spamtroll.phpbb.scanner'
             - '@language'
             - '@request'
             - '@template'

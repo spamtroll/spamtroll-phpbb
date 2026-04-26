@@ -34,6 +34,14 @@
     </div>
 <!-- ENDIF -->
 
+<!-- IF S_QUOTA_SKIPPED -->
+    <div class="errorbox">
+        <h3>{L_SPAMTROLL_QUOTA_SKIPPED_HEADING}</h3>
+        <p>{S_QUOTA_SKIPPED_MESSAGE}</p>
+        <p><a href="{U_QUOTA_SKIPPED_UPGRADE}" target="_blank" rel="noopener" class="button1">{L_SPAMTROLL_QUOTA_SKIPPED_UPGRADE}</a></p>
+    </div>
+<!-- ENDIF -->
+
 <form id="acp_spamtroll" method="post" action="{U_ACTION}">
 
     <fieldset>
