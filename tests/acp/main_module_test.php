@@ -32,6 +32,9 @@ final class main_module_test extends TestCase
         // arguments therefore threw ArgumentCountError on every visit to
         // ACP → Spamtroll Settings.
         $class_name = main_module::class;
+        // The stray argument is the point of the test — PHPStan sees
+        // through the variable and would rather we did not pass one.
+        /** @phpstan-ignore-next-line */
         $module = new $class_name(new \stdClass());
 
         self::assertInstanceOf(main_module::class, $module);
