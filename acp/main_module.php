@@ -20,10 +20,19 @@ use Spamtroll\Sdk\Exception\SpamtrollException;
 /**
  * ACP "Settings" form for the Spamtroll extension.
  *
- * Mounted by phpBB through {@see main_info} and instantiated as a regular
- * service so dependencies can be injected. The class is intentionally
- * thin — it just maps form fields to config rows and exposes a
- * "Test connection" action that hits `GET /scan/status` via the SDK.
+ * Mounted by phpBB through {@see main_info}. phpBB does **not** build ACP
+ * modules through the DI container: includes/functions_module.php:598-600
+ * does a bare `$class_name = $this->p_name; $this->module = new
+ * $class_name($this);` and the file contains no reference to
+ * $phpbb_container at all. A constructor with required arguments therefore
+ * fataled with ArgumentCountError the moment an administrator opened the
+ * module. Dependencies are resolved inside main() from globals and the
+ * container instead — the same pattern phpBB's own bundled modules use
+ * (see includes/acp/acp_extensions.php:41-55).
+ *
+ * The class is intentionally thin — it just maps form fields to config
+ * rows and exposes a "Test connection" action that hits `GET /scan/status`
+ * via the SDK.
  */
 class main_module
 {
@@ -68,13 +77,27 @@ class main_module
     ];
 
     /**
+     * phpBB passes the module manager as the single constructor argument
+     * (functions_module.php:600). Nothing else is available at this point,
+     * so the signature stays optional and unused.
+     *
+     * @param mixed $p_master
+     */
+    public function __construct($p_master = null)
+    {
+    }
+
+    /**
+     * Injects the collaborators directly. Only used by the unit tests —
+     * production instances go through main().
+     *
      * @param \phpbb\config\config $config
      * @param \phpbb\language\language $language
      * @param \phpbb\request\request_interface $request
      * @param \phpbb\template\template $template
      * @param \phpbb\user $user
      */
-    public function __construct($config, client_factory $factory, scanner $scanner, $language, $request, $template, $user)
+    public function set_dependencies($config, client_factory $factory, scanner $scanner, $language, $request, $template, $user): void
     {
         $this->config = $config;
         $this->factory = $factory;
@@ -87,6 +110,16 @@ class main_module
 
     public function main(string $id, string $mode): void
     {
+        global $config, $language, $phpbb_container, $request, $template, $user;
+
+        $this->config = $config;
+        $this->language = $language;
+        $this->request = $request;
+        $this->template = $template;
+        $this->user = $user;
+        $this->factory = $phpbb_container->get('spamtroll.phpbb.client_factory');
+        $this->scanner = $phpbb_container->get('spamtroll.phpbb.scanner');
+
         $this->page_title = 'ACP_SPAMTROLL_SETTINGS';
         $this->tpl_name = 'acp_spamtroll_settings';
 
