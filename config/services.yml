@@ -32,13 +32,18 @@ services:
         tags:
             - { name: event.listener }
 
-    spamtroll.phpbb.acp.module:
-        class: spamtroll\phpbb\acp\main_module
+    spamtroll.phpbb.cron.task.cleanup_logs:
+        class: spamtroll\phpbb\cron\task\cleanup_logs
         arguments:
             - '@config'
-            - '@spamtroll.phpbb.client_factory'
-            - '@spamtroll.phpbb.scanner'
-            - '@language'
-            - '@request'
-            - '@template'
-            - '@user'
+            - '@spamtroll.phpbb.logger'
+        calls:
+            - [set_name, [cron.task.spamtroll.cleanup_logs]]
+        tags:
+            - { name: cron.task }
+
+    # NOTE: no service definition for \spamtroll\phpbb\acp\main_module.
+    # phpBB builds ACP modules with a bare `new $class_name($this)`
+    # (includes/functions_module.php:598-600) and never consults the DI
+    # container, so such an entry would be dead code. The module resolves
+    # its own dependencies from $phpbb_container inside main().

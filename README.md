@@ -18,29 +18,35 @@ phpBB tooling.
 ## Requirements
 
 - phpBB 3.3 or newer
-- PHP 8.0+
+- PHP 8.2+
 - The `curl` and `json` PHP extensions
 - A Spamtroll API key (sign up at https://spamtroll.io)
 
 ## Installation
 
-### Via Composer (recommended)
+### From a release archive (recommended)
 
-```bash
-cd /path/to/phpbb/ext/
-mkdir -p spamtroll && cd spamtroll
-composer create-project spamtroll/phpbb phpbb --no-dev
-```
+Download `spamtroll_phpbb_<version>.zip` from the
+[releases page](https://github.com/spamtroll/spamtroll-phpbb/releases) and
+unpack it into the root of your phpBB install. The archive already contains
+`ext/spamtroll/phpbb/` **including its `vendor/` directory**, so no Composer
+run is needed on the board.
 
 Then enable the extension in the ACP under
 **Customise → Manage extensions → Spamtroll Anti-Spam → Enable**.
 
-### Manual
+### From source
 
-1. Copy the extension into `ext/spamtroll/phpbb/` inside your phpBB install.
-2. Run `composer install --no-dev` from inside that directory to fetch the
-   Spamtroll PHP SDK.
-3. Enable the extension in the ACP.
+```bash
+cd /path/to/phpbb/ext/
+mkdir -p spamtroll && cd spamtroll
+git clone https://github.com/spamtroll/spamtroll-phpbb.git phpbb
+cd phpbb && composer install --no-dev --optimize-autoloader
+```
+
+Enabling the extension **before** `composer install` has run will fatal: the
+`Spamtroll\Sdk\*` classes come from `vendor/` and phpBB has no way to fetch
+them itself.
 
 ## Configuration
 
