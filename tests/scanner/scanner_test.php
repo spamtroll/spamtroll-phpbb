@@ -136,7 +136,7 @@ final class scanner_test extends TestCase
             public function log(array $entry): void
             {
             }
-            public function cleanup(int $retention_days): int
+            public function cleanup(int $retention_days, int $max_batches = 20): int
             {
                 return 0;
             }

@@ -10,14 +10,17 @@
          cacheDirectory=".phpunit.cache">
     <testsuites>
         <testsuite name="unit">
+            <directory suffix="_test.php">tests/acp</directory>
             <directory suffix="_test.php">tests/scanner</directory>
             <directory suffix="_test.php">tests/listener</directory>
+            <directory suffix="_test.php">tests/logger</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
             <directory suffix=".php">service</directory>
             <directory suffix=".php">event</directory>
+            <directory suffix=".php">acp</directory>
         </include>
     </source>
 </phpunit>

@@ -7,16 +7,14 @@ parameters:
     excludePaths:
         - vendor (?)
         - tests/integration (?)
-        # Files that extend abstract phpBB / PHPUnit base classes which
-        # aren't autoloaded in this project (only the SDK is). PHPStan
-        # can't ignore "extends unknown class" via ignoreErrors, so those
-        # files have to live outside the analysis set entirely.
+        # Files that extend abstract phpBB base classes which aren't
+        # autoloaded in this project (only the SDK is). PHPStan can't
+        # ignore "extends unknown class" via ignoreErrors, so those files
+        # have to live outside the analysis set entirely.
         - ext.php
         - cron/task/cleanup_logs.php
         - migrations/v10x/m1_initial_schema.php
         - migrations/v10x/m2_default_config.php
-        - tests/scanner/scanner_test.php
-        - tests/listener/registration_test.php
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
     universalObjectCratesClasses:
@@ -32,7 +30,10 @@ parameters:
                 - '#Call to method .* on an unknown class phpbb\\#i'
                 - '#Access to property .* on an unknown class phpbb\\#i'
                 - '#Instantiated class phpbb\\#'
-                - '#given\\.$#i'
+                # Passing a test double where an un-autoloadable phpBB type
+                # is declared. NB: NEON single quotes are literal, so a
+                # regex backslash is written '\\' here.
+                - '#expects phpbb\\.*, .* given\.$#'
             paths:
                 - service/*
                 - event/*

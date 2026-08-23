@@ -40,6 +40,10 @@ class main_module
     public string $page_title = '';
     public string $tpl_name = '';
 
+    // Assigned by phpBB at functions_module.php:677. Declared explicitly
+    // because creating it dynamically is deprecated as of PHP 8.2.
+    public string $module_path = '';
+
     /** @var \phpbb\config\config */
     protected $config;
 
@@ -76,16 +80,10 @@ class main_module
         'spamtroll_log_retention_days' => 30,
     ];
 
-    /**
-     * phpBB passes the module manager as the single constructor argument
-     * (functions_module.php:600). Nothing else is available at this point,
-     * so the signature stays optional and unused.
-     *
-     * @param mixed $p_master
-     */
-    public function __construct($p_master = null)
-    {
-    }
+    // No constructor on purpose. phpBB calls `new $class_name($this)`
+    // (functions_module.php:600); PHP discards the argument when the class
+    // declares no constructor, which is how every bundled ACP module works
+    // (includes/acp/acp_extensions.php has none either).
 
     /**
      * Injects the collaborators directly. Only used by the unit tests —
