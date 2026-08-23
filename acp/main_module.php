@@ -85,29 +85,10 @@ class main_module
     // declares no constructor, which is how every bundled ACP module works
     // (includes/acp/acp_extensions.php has none either).
 
-    /**
-     * Injects the collaborators directly. Only used by the unit tests —
-     * production instances go through main().
-     *
-     * @param \phpbb\config\config $config
-     * @param \phpbb\language\language $language
-     * @param \phpbb\request\request_interface $request
-     * @param \phpbb\template\template $template
-     * @param \phpbb\user $user
-     */
-    public function set_dependencies($config, client_factory $factory, scanner $scanner, $language, $request, $template, $user): void
-    {
-        $this->config = $config;
-        $this->factory = $factory;
-        $this->scanner = $scanner;
-        $this->language = $language;
-        $this->request = $request;
-        $this->template = $template;
-        $this->user = $user;
-    }
-
     public function main(string $id, string $mode): void
     {
+        // register_compatibility_globals() publishes these
+        // (includes/compatibility_globals.php:40,60).
         global $config, $language, $phpbb_container, $request, $template, $user;
 
         $this->config = $config;
