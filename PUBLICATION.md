@@ -8,7 +8,7 @@ Public search cannot establish that there is no existing entry.
 ## Distribution
 
 - Source: https://github.com/spamtroll/spamtroll-phpbb
-- Candidate release: https://github.com/spamtroll/spamtroll-phpbb/releases/tag/v0.1.1
+- Published release: https://github.com/spamtroll/spamtroll-phpbb/releases/tag/v0.1.1
 - Installable asset: `spamtroll_phpbb_0.1.1.zip`; use the plugin asset, not GitHub's source ZIP.
 - Checksum asset: `spamtroll_phpbb_0.1.1.zip.sha256`.
 - Archive root: `spamtroll/phpbb/`; extract into the forum's `ext/` directory.
@@ -25,6 +25,30 @@ Run `bash build/build-package.sh`, `python3 build/verify-package.py` and
 `python3 build/check-epv.py PATH_TO_EPV`. The official validator is pinned to
 `phpbb/epv@cc230d4a0253d7f6dc0d0c526c2db84ccd831f35` in CI. The wrapper verifies
 its actual pass marker because some validator exceptions return process exit 0.
+
+## Verified release evidence
+
+Version 0.1.1 is published at source tag \`d0ef3d5\`.
+[Public QA](https://github.com/spamtroll/spamtroll-phpbb/actions/runs/37223604943)
+passed PHP 8.2, 8.3 and 8.4 plus package/official EPV verification.
+[Release workflow](https://github.com/spamtroll/spamtroll-phpbb/actions/runs/37223681317)
+built and published the ZIP and checksum successfully.
+
+The downloaded release was checked against the tagged runtime, metadata and
+documentation, complete GPL text and pinned production SDK. SHA-256:
+\`9fb1c97263ebdd1714180d7e15be0a337c855addf33c8fa14bcf6a5cbf523eff\`.
+The official EPV on that downloaded archive reported Fatal/Error/Warning/Notice
+all zero. Archive timestamps can differ between builds; use the checksum of the
+actual published asset.
+
+Actual phpBB 3.3.19 with PHP 8.2.34 and MariaDB 13.0.2 was installed in a disposable,
+socket-only local fixture. Native extension enable, SDK/scanner loading,
+registration dispatch, full ACP settings/language loading and quota-text HTML
+escaping passed. Disable/re-enable/disable/purge passed and removed all extension
+configuration, metadata rows and its log table. phpBB purge leaves source files
+for manual removal. The fixture database was shut down. Mail was disabled and
+the API key was empty: these checks establish native lifecycle compatibility,
+not a live service scan, mail-delivery test or directory acceptance.
 
 ## Prepared directory fields
 
