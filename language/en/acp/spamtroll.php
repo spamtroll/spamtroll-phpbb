@@ -25,7 +25,7 @@ $lang = array_merge($lang, [
 
     'SPAMTROLL_API_SETTINGS' => 'API connection',
     'SPAMTROLL_API_KEY' => 'API key',
-    'SPAMTROLL_API_KEY_EXPLAIN' => 'Your Spamtroll API key. Sign up at https://spamtroll.io to get one.',
+    'SPAMTROLL_API_KEY_EXPLAIN' => 'Your Spamtroll platform API key. Sign up at https://spamtroll.io and create a platform to get one.',
     'SPAMTROLL_API_URL' => 'API base URL',
     'SPAMTROLL_TIMEOUT' => 'HTTP timeout (seconds)',
 

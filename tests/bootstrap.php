@@ -13,6 +13,14 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (!function_exists('utf8_htmlspecialchars')) {
+    // phpBB includes/utf/utf_tools.php uses this exact wrapper.
+    function utf8_htmlspecialchars(string $value): string
+    {
+        return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+    }
+}
+
 // Stand-ins for phpBB's namespaced classes so unit tests can run without a
 // full phpBB install. These have to mirror the real classes closely enough
 // that a test failure means a production failure — the previous stub of

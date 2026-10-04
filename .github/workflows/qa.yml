@@ -51,3 +51,28 @@ jobs:
 
       - name: Run PHPUnit
         run: composer exec phpunit -- --colors=always
+
+
+  package:
+    name: Installable package and official EPV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - name: Fetch official pinned validator
+        uses: actions/checkout@v4
+        with:
+          repository: phpbb/epv
+          ref: cc230d4a0253d7f6dc0d0c526c2db84ccd831f35
+          path: .epv-validator
+      - name: Install validator
+        run: composer install --working-dir=.epv-validator --no-dev --prefer-dist --no-interaction --no-progress
+      - name: Build and verify distributable
+        run: |
+          bash build/build-package.sh
+          python3 build/verify-package.py
+          python3 build/check-epv.py .epv-validator

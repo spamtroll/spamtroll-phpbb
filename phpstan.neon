@@ -6,6 +6,7 @@ parameters:
         - ./
     excludePaths:
         - vendor (?)
+        - build/verify-cms.php
         - tests/integration (?)
         # Files that extend abstract phpBB base classes which aren't
         # autoloaded in this project (only the SDK is). PHPStan can't

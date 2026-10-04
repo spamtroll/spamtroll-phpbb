@@ -102,8 +102,8 @@ class main_module
         $this->page_title = 'ACP_SPAMTROLL_SETTINGS';
         $this->tpl_name = 'acp_spamtroll_settings';
 
-        if (is_object($this->language) && method_exists($this->language, 'add_lang_ext')) {
-            $this->language->add_lang_ext('spamtroll/phpbb', 'acp/spamtroll');
+        if (is_object($this->language) && method_exists($this->language, 'add_lang')) {
+            $this->language->add_lang('acp/spamtroll', 'spamtroll/phpbb');
         }
 
         $action = $this->request->variable('action', '');
@@ -168,7 +168,7 @@ class main_module
                     (int) $stats['total'],
                     $current,
                     $limit,
-                    htmlspecialchars($plan, ENT_QUOTES, 'UTF-8'),
+                    utf8_htmlspecialchars($plan),
                 );
             } else {
                 $body = sprintf(

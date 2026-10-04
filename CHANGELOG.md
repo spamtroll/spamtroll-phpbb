@@ -5,7 +5,13 @@ All notable changes to the Spamtroll phpBB extension will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.1] - 2026-10-04
+
+### Publication
+- Restore mandatory extension version metadata; Composer strict validation suppresses only its generic version-field recommendation.
+- Standard vendor/name archive layout with production SDK, complete GPL text in lowercase license.txt, source-byte/checksum verification and pinned official EPV checks in CI.
+- Use phpBB’s native UTF-8 HTML escaping wrapper for the quota banner and its supported language loader for ACP settings.
+- Correct platform key, suspicious-decision behavior, installation paths and private-message/local excerpt data disclosure.
 
 ### Fixed
 - **Registration scanning now actually runs.** The listener was subscribed to `core.user_add_modify_data`, which fires inside `user_add()` (`includes/functions_user.php:290`) with no `error` variable, and phpBB discards keys a listener adds — `dispatcher::trigger_event()` returns `get_data_filtered(array_keys($data))` (`phpbb/event/dispatcher.php:47`), i.e. `array_intersect_key` (`phpbb/event/data.php:44`). Moved to `core.ucp_register_data_after` (`includes/ucp/ucp_register.php:329-338`), which exposes `submit`, `data`, `cp_data` and `error` while the form can still be rejected.
@@ -19,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Preview and refresh no longer trigger a scan.** `posting.php:937` and the PM equivalent run the event block for preview and refresh as well as submit; every preview click consumed a scan from the daily quota and could raise a blocking error on a button that does not post.
 - Content is `html_entity_decode()`d before being sent to the API. phpBB's request layer `htmlspecialchars()`es every string variable (`phpbb/request/type_cast_helper.php:46`), so the scanner was being asked to classify `&amp;` and `&quot;`.
 - **The extension is installable again.** `composer.json` declared a `path` repository pointing at a sibling SDK checkout (`../spamtroll-php-sdk`, pinned to 0.9.2); without that directory `composer install` aborts outright. The SDK is on Packagist, so the block is gone and the constraint is `^0.9.3`.
-- **CI runs for the first time.** `composer validate --strict` failed on the `version` field, the first step of the QA workflow — PHPStan and PHPUnit were `skipped` on every run and had never executed. Field removed.
+- **CI runs for the first time.** Generic Composer strict validation previously rejected the explicit version; removing it let tests run but made phpBB/EPV metadata incomplete. This release restores the version and uses Composer’s targeted `--no-check-version` option while retaining strict schema/lock validation.
 - A PHPStan ignore rule (`'#given\\.$#i'`) was dead: NEON single quotes are literal, so the pattern looked for a backslash. Replaced with a targeted rule, which let `tests/` return to the analysis set.
 
 ### Changed
@@ -29,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Installation documentation rewritten: the `composer create-project` recipe in the README could not have worked.
 
 ### Added
-- Release workflow (`.github/workflows/release.yml`) building `spamtroll_phpbb_<version>.zip` with `ext/spamtroll/phpbb/` **including a production `vendor/` tree**, which is what the phpBB Extension Database expects. Without it the unpacked extension fatals on enable, since `Spamtroll\Sdk\*` has no other source. The job asserts `vendor/autoload.php` and the SDK are present before zipping.
+- Release workflow (`.github/workflows/release.yml`) building `spamtroll_phpbb_<version>.zip` with `spamtroll/phpbb/` **including a production `vendor/` tree**, which is what the phpBB Extension Database expects. Without it the unpacked extension fatals on enable, since `Spamtroll\Sdk\*` has no other source. The job asserts `vendor/autoload.php` and the SDK are present before zipping.
 - Test doubles under `tests/support/` and an event harness reproducing `\phpbb\event\dispatcher::trigger_event()`, including its `get_data_filtered()` key filtering. The previous `\phpbb\event\data` stub did not filter, which is why the test suite passed against a registration path that was a no-op in production.
 - Regression coverage for all four broken paths (`tests/listener/{registration,post,pm}_test.php`, `tests/logger/logger_test.php`, `tests/acp/main_module_test.php`): 19 failures + 4 errors out of 43 against the pre-fix code, 43/43 green after.
 
