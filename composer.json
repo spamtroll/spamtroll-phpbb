@@ -49,5 +49,13 @@
     "prefer-stable": true,
     "config": {
         "sort-packages": true
-    }
+    },
+    "version": "0.1.1",
+    "authors": [
+        {
+            "name": "Spamtroll",
+            "homepage": "https://spamtroll.io",
+            "role": "Developer"
+        }
+    ]
 }

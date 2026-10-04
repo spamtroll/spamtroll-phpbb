@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fdfdfe1358881b9f1661328f22d51285",
+    "content-hash": "72ecd231b59c2a896998d548451c615b",
     "packages": [
         {
             "name": "spamtroll/php-sdk",

@@ -55,7 +55,7 @@ class client_factory
             $timeout,
             ClientConfig::DEFAULT_MAX_RETRIES,
             ClientConfig::DEFAULT_RETRY_BASE_DELAY_MS,
-            'spamtroll-phpbb/0.1.0'
+            'spamtroll-phpbb/0.1.1'
         );
 
         return new Client((string) $this->config['spamtroll_api_key'], $sdk_config, $this->http);
